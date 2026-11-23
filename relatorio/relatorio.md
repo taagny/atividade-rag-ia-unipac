@@ -9,9 +9,13 @@
 
 ## Item 1 — Captura de tela
 
-Insira aqui o print do terminal executando os Desafios 1 e 2, incluindo as perguntas dentro e fora do contexto:
+Execução de rag_lab.py no Desafio 1, com pergunta dentro do contexto (reembolso) e fora do contexto (viagens interplanetárias).
 
-![Print do terminal](../capturas/print_terminal.png)
+![Print do terminal — parte 1](../capturas/print_terminal1.png)
+
+![Print do terminal — parte 2](../capturas/print_terminal2.png)
+
+![Print do terminal — parte 3](../capturas/print_terminal3.png)
 
 ## Item 2 — Análise do Desafio 1
 

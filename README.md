@@ -54,7 +54,7 @@ $env:PYTHONUTF8 = "1"
 python rag_lab.py --desafio 1
 ```
 
-Depois, tire o print do terminal executando o script e salve-o em `capturas/print_terminal.png`. Esse arquivo agora pode ser versionado.
+Depois, tire os prints do terminal executando o script e salve-os em `capturas/print_terminal1.png`, `capturas/print_terminal2.png` e `capturas/print_terminal3.png`. Esses arquivos podem ser versionados.
 
 ## Estrutura de pastas
 
@@ -66,7 +66,9 @@ Depois, tire o print do terminal executando o script e salve-o em `capturas/prin
 │   ├── saida_desafio1.txt
 │   ├── saida_desafio2_chunk40.txt
 │   ├── saida_desafio2_chunk500.txt
-│   └── print_terminal.png
+│   ├── print_terminal1.png
+│   ├── print_terminal2.png
+│   └── print_terminal3.png
 ├── relatorio/
 │   └── relatorio.md
 ├── .env.example
