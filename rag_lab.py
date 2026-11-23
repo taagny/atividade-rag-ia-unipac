@@ -149,14 +149,31 @@ def executar_desafio1(chunks: list[str]) -> None:
     )
 
 
+def executar_desafio2(chunks: list[str]) -> None:
+    """Exibe os resultados da recuperação para a pergunta do trabalho híbrido."""
+    pergunta = "O que acontece se o funcionário faltar no dia presencial?"
+    resultados = recuperar_top_k(pergunta, chunks)
+    print(f"\nPERGUNTA: {pergunta}")
+    print("\n--- CHUNKS RECUPERADOS ---")
+    for indice, (chunk, similaridade) in enumerate(resultados, start=1):
+        print(f"\n[{indice}] Similaridade: {similaridade:.6f}")
+        print(chunk)
+
+
 def main() -> None:
     """Ponto de entrada do laboratório."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--desafio", choices=["1"], default="1")
+    parser.add_argument("--desafio", choices=["1", "2"], default="1")
+    parser.add_argument("--chunk", type=int, default=500)
+    parser.add_argument("--overlap", type=int, default=50)
     args = parser.parse_args()
-    chunks = criar_chunks(carregar_base(), tamanho_chunk=500, sobreposicao=50)
+    chunks = criar_chunks(
+        carregar_base(), tamanho_chunk=args.chunk, sobreposicao=args.overlap
+    )
     if args.desafio == "1":
         executar_desafio1(chunks)
+    else:
+        executar_desafio2(chunks)
 
 
 if __name__ == "__main__":
