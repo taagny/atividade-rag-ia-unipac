@@ -1,6 +1,6 @@
 # Relatório — Pipeline RAG
 
-**Aluno:** `Taagny Augusto Reis da Silva`  
+**Aluno:** Taagny Augusto Reis da Silva  
 **Curso:** Ciência da Computação  
 **Disciplina:** Inteligência Artificial  
 **Instituição:** UNIPAC Barbacena  
