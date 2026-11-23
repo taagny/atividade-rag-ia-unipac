@@ -57,16 +57,26 @@ def similaridade_coseno(vetor_a: np.ndarray, vetor_b: np.ndarray) -> float:
 
 
 def recuperar_top_k(
-    pergunta: str, chunks: list[str], k: int = 3
+    pergunta: str,
+    chunks: list[str],
+    k: int = 3,
+    embeddings_chunks: np.ndarray | None = None,
 ) -> list[tuple[str, float]]:
-    """Retorna até k chunks mais similares à pergunta."""
+    """Retorna até k chunks mais similares à pergunta.
+
+    Quando ``embeddings_chunks`` é informado, ele é reutilizado para evitar
+    recalcular os embeddings da base a cada pergunta.
+    """
     if k <= 0:
         raise ValueError("k deve ser maior que zero")
     if not chunks:
         return []
 
     embedding_pergunta = gerar_embeddings(pergunta)[0]
-    embeddings_chunks = gerar_embeddings(chunks)
+    if embeddings_chunks is None:
+        embeddings_chunks = gerar_embeddings(chunks)
+    if len(embeddings_chunks) != len(chunks):
+        raise ValueError("embeddings_chunks deve ter um vetor para cada chunk")
     resultados = [
         (chunk, similaridade_coseno(embedding_pergunta, embedding_chunk))
         for chunk, embedding_chunk in zip(chunks, embeddings_chunks)
@@ -132,9 +142,13 @@ def carregar_base(caminho: str = "dados/politicas_empresa.txt") -> str:
     return Path(caminho).read_text(encoding="utf-8")
 
 
-def imprimir_comparacao(pergunta: str, chunks: list[str]) -> None:
+def imprimir_comparacao(
+    pergunta: str,
+    chunks: list[str],
+    embeddings_chunks: np.ndarray | None = None,
+) -> None:
     """Exibe lado a lado as respostas sem e com contexto."""
-    resultados = recuperar_top_k(pergunta, chunks)
+    resultados = recuperar_top_k(pergunta, chunks, embeddings_chunks=embeddings_chunks)
     resposta_off = responder_rag_off(pergunta)
     resposta_on = responder_rag_on(pergunta, resultados)
     print(f"\nPERGUNTA: {pergunta}")
@@ -144,22 +158,30 @@ def imprimir_comparacao(pergunta: str, chunks: list[str]) -> None:
     print(resposta_on)
 
 
-def executar_desafio1(chunks: list[str]) -> None:
+def executar_desafio1(
+    chunks: list[str], embeddings_chunks: np.ndarray | None = None
+) -> None:
     """Executa as perguntas dentro e fora do contexto da base."""
     imprimir_comparacao(
         "Como funciona a solicitação de reembolso de equipamentos de TI na empresa?",
         chunks,
+        embeddings_chunks,
     )
     imprimir_comparacao(
         "Qual é a política da empresa para viagens interplanetárias?",
         chunks,
+        embeddings_chunks,
     )
 
 
-def executar_desafio2(chunks: list[str]) -> None:
+def executar_desafio2(
+    chunks: list[str], embeddings_chunks: np.ndarray | None = None
+) -> None:
     """Exibe os resultados da recuperação para a pergunta do trabalho híbrido."""
     pergunta = "O que acontece se o funcionário faltar no dia presencial?"
-    resultados = recuperar_top_k(pergunta, chunks)
+    resultados = recuperar_top_k(
+        pergunta, chunks, embeddings_chunks=embeddings_chunks
+    )
     print(f"\nPERGUNTA: {pergunta}")
     print("\n--- CHUNKS RECUPERADOS ---")
     for indice, (chunk, similaridade) in enumerate(resultados, start=1):
@@ -178,10 +200,11 @@ def main() -> None:
     chunks = criar_chunks(
         carregar_base(), tamanho_chunk=args.chunk, sobreposicao=args.overlap
     )
+    embeddings_chunks = gerar_embeddings(chunks)
     if args.desafio == "1":
-        executar_desafio1(chunks)
+        executar_desafio1(chunks, embeddings_chunks)
     else:
-        executar_desafio2(chunks)
+        executar_desafio2(chunks, embeddings_chunks)
 
 
 if __name__ == "__main__":
