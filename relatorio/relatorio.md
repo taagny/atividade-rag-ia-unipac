@@ -23,11 +23,9 @@ Essa diferença ocorre porque a memória paramétrica do modelo pode falhar em d
 
 ## Item 3 — Análise do Desafio 2
 
-Na execução registrada, a configuração **chunk 40 / overlap 10** causou Retrieval Failure didático: os três resultados tiveram similaridades de **0,547787**, **0,537774** e **0,474530**, mas os trechos recuperados são fragmentos curtos e não concentram, em uma única unidade, a consequência da falta, a necessidade de justificativa em 24 horas e a advertência após reincidência. Assim, a busca encontra palavras relacionadas, mas pode perder o sentido completo da regra.
+Na execução registrada, **chunk 40 / overlap 10** produziu similaridades de **0,547787**, **0,537774** e **0,474530**, mas os trechos eram fragmentos curtos. O RAG ON respondeu **“Não encontrou a resposta”** e mencionou “orçamento” e “cobertura das aulas”, assuntos que não aparecem na base de políticas. Isso caracteriza um Retrieval Failure: a fragmentação impediu que a busca reunisse, com sentido completo, a justificativa em 24 horas, o registro e a advertência após reincidência.
 
-Com **chunk 500 / overlap 50**, o primeiro resultado teve similaridade **0,662807** e apresentou a regra completa sobre o dia presencial, a justificativa em até 24 horas, o registro e a advertência. Esse resultado foi mais útil para responder à pergunta.
-
-O melhor resultado de **chunk 500 / overlap 50** teve similaridade **0,662807**, acima do melhor resultado do chunk 40, e trouxe junto da regra do dia presencial trechos de férias e vale-refeição. Isso evidencia a diluição: o vetor carrega mais contexto, mas mistura assuntos diferentes na mesma unidade. Chunks pequenos carregam pouco contexto por unidade e podem recuperar fragmentos sem sentido completo; chunks grandes preservam mais contexto, mas podem diluir a similaridade vetorial. Além disso, a divisão por caracteres corta palavras no meio, como em **“corporat”**, o que também prejudica a qualidade dos embeddings.
+Com **chunk 500 / overlap 50**, o melhor resultado teve similaridade **0,662807** e misturou a regra do dia presencial com trechos de férias e vale-refeição, evidenciando a diluição de assuntos no mesmo vetor. Ainda assim, o RAG ON respondeu corretamente: a falta deve ser justificada em até 24 horas; sem justificativa, gera registro e, após reincidência, pode resultar em advertência. O trade-off é que chunks pequenos carregam pouco contexto e podem recuperar fragmentos sem sentido completo, enquanto chunks grandes preservam mais contexto, mas diluem a similaridade. Além disso, a divisão por caracteres corta palavras no meio, como em **“corporat”**, prejudicando a qualidade dos embeddings.
 
 ## Item 4 — Cálculo manual da Similaridade de Cosseno
 
