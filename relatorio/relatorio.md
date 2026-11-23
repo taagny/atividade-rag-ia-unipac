@@ -15,7 +15,9 @@ Insira aqui o print do terminal executando os Desafios 1 e 2, incluindo as pergu
 
 ## Item 2 — Análise do Desafio 1
 
-No modo RAG OFF, o modelo recebe somente a pergunta. Por isso, sua resposta pode ser genérica ou alucinada: ele não tem acesso às políticas privadas da empresa. No modo RAG ON, o contexto recuperado orienta a resposta com os dados da base: a solicitação é feita pelo portal **Serviços-TI**, até o **dia 15 de cada mês**, com **nota fiscal emitida no CPF do colaborador**.
+Na execução real, o RAG OFF respondeu com um procedimento genérico de várias etapas, incluindo “Declaração de Uso”, verificação do uso e documentos não previstos na base. Ele não informou o portal, o prazo do dia 15 nem a exigência do CPF. Já o RAG ON respondeu que a solicitação deve ser enviada até o **dia 15 de cada mês**, com **nota fiscal emitida no CPF do colaborador**, e também informou a análise no ciclo seguinte para pedidos fora do prazo ou sem documentação. Embora o contexto recuperado contenha o portal **“Serviços-TI”**, a resposta final capturada não o repetiu; portanto, não atribuo esse acerto à resposta real do modelo.
+
+Na pergunta fora do contexto, sobre viagens interplanetárias, o RAG OFF produziu uma resposta genérica sobre limitações tecnológicas, riscos, custos e até programas de astronautas. O RAG ON foi mais adequado ao contexto da aplicação: respondeu **“Não encontrou a resposta”**, explicando que a base não contém essa política.
 
 Essa diferença ocorre porque a memória paramétrica do modelo pode falhar em dados corporativos: as informações podem ser privadas, não fazer parte do conjunto de treinamento, estar desatualizadas ou não possuir uma fonte verificável. O RAG reduz esse problema ao buscar o conteúdo relevante em uma fonte externa e fornecê-lo ao modelo no momento da pergunta.
 
