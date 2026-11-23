@@ -27,6 +27,7 @@ Se `LLM_PROVIDER` não estiver configurado, o script não quebra: ele exibe a me
 Desafio 1 — compara RAG OFF e RAG ON para a pergunta de reembolso e para uma pergunta fora do contexto:
 
 ```powershell
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $env:PYTHONUTF8 = "1"
 python rag_lab.py --desafio 1 2>$null | Out-File -Encoding utf8 capturas/saida_desafio1.txt
 ```
@@ -45,7 +46,15 @@ python rag_lab.py --desafio 2 --chunk 500 --overlap 50 2>$null | Out-File -Encod
 
 As saídas devem ser salvas em UTF-8 nos arquivos `capturas/saida_desafio1.txt`, `capturas/saida_desafio2_chunk40.txt` e `capturas/saida_desafio2_chunk500.txt`. O `stderr` é descartado nos comandos acima para evitar mensagens do PowerShell misturadas à captura; erros reais continuam visíveis quando o script é executado diretamente.
 
-Depois, tire um print do terminal executando o script e salve-o em `capturas/print_terminal.png`. Esse arquivo agora pode ser versionado.
+Para tirar o print do terminal, execute o desafio sem `2>$null`, sem `| Out-File` e sem redirecionamento. Assim, as perguntas, os chunks, as similaridades e as respostas ficam visíveis no console:
+
+```powershell
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$env:PYTHONUTF8 = "1"
+python rag_lab.py --desafio 1
+```
+
+Depois, tire o print do terminal executando o script e salve-o em `capturas/print_terminal.png`. Esse arquivo agora pode ser versionado.
 
 ## Estrutura de pastas
 
