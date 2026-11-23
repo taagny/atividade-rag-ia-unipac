@@ -1,7 +1,9 @@
 """Laboratório didático de RAG para a atividade da UNIPAC."""
 
+import argparse
 from functools import lru_cache
 import os
+from pathlib import Path
 
 import numpy as np
 from dotenv import load_dotenv
@@ -116,3 +118,46 @@ def montar_prompt(pergunta: str, resultados: list[tuple[str, float]]) -> str:
 def responder_rag_on(pergunta: str, resultados: list[tuple[str, float]]) -> str:
     """Responde usando os chunks recuperados como contexto."""
     return chamar_llm(montar_prompt(pergunta, resultados))
+
+
+def carregar_base(caminho: str = "dados/politicas_empresa.txt") -> str:
+    """Lê a base de conhecimento a partir da raiz do projeto."""
+    return Path(caminho).read_text(encoding="utf-8")
+
+
+def imprimir_comparacao(pergunta: str, chunks: list[str]) -> None:
+    """Exibe lado a lado as respostas sem e com contexto."""
+    resultados = recuperar_top_k(pergunta, chunks)
+    resposta_off = responder_rag_off(pergunta)
+    resposta_on = responder_rag_on(pergunta, resultados)
+    print(f"\nPERGUNTA: {pergunta}")
+    print("\n--- RAG OFF (sem contexto) ---")
+    print(resposta_off)
+    print("\n--- RAG ON (com contexto) ---")
+    print(resposta_on)
+
+
+def executar_desafio1(chunks: list[str]) -> None:
+    """Executa as perguntas dentro e fora do contexto da base."""
+    imprimir_comparacao(
+        "Como funciona a solicitação de reembolso de equipamentos de TI na empresa?",
+        chunks,
+    )
+    imprimir_comparacao(
+        "Qual é a política da empresa para viagens interplanetárias?",
+        chunks,
+    )
+
+
+def main() -> None:
+    """Ponto de entrada do laboratório."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--desafio", choices=["1"], default="1")
+    args = parser.parse_args()
+    chunks = criar_chunks(carregar_base(), tamanho_chunk=500, sobreposicao=50)
+    if args.desafio == "1":
+        executar_desafio1(chunks)
+
+
+if __name__ == "__main__":
+    main()
