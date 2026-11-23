@@ -22,3 +22,14 @@ Na execução registrada, a configuração **chunk 40 / overlap 10** causou Retr
 Com **chunk 500 / overlap 50**, o primeiro resultado teve similaridade **0,662807** e apresentou a regra completa sobre o dia presencial, a justificativa em até 24 horas, o registro e a advertência. Esse resultado foi mais útil para responder à pergunta.
 
 O trade-off é que chunks muito pequenos preservam alta precisão local, mas podem perder contexto e sentido. Chunks muito grandes preservam mais contexto, mas podem diluir a similaridade vetorial ao misturar assuntos diferentes. A configuração adequada depende do tamanho e da organização dos documentos.
+
+## Item 4 — Cálculo manual da Similaridade de Cosseno
+
+Para `u = [1, 2]` e `v = [2, 1]`:
+
+1. Produto escalar: `u · v = 1 × 2 + 2 × 1 = 4`.
+2. Norma de `u`: `||u|| = √(1² + 2²) = √5`.
+3. Norma de `v`: `||v|| = √(2² + 1²) = √5`.
+4. Similaridade: `cos(θ) = 4 / (√5 × √5) = 4/5 = 0,8`.
+
+O resultado 0,8 indica uma alta semelhança entre os vetores, embora eles não tenham a mesma direção. Em um sistema RAG, valores maiores representam embeddings mais próximos semanticamente, de acordo com o espaço vetorial aprendido pelo modelo.
