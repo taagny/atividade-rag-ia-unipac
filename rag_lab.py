@@ -43,3 +43,21 @@ def similaridade_coseno(vetor_a: np.ndarray, vetor_b: np.ndarray) -> float:
     if norma_a == 0 or norma_b == 0:
         return 0.0
     return float(np.dot(vetor_a, vetor_b) / (norma_a * norma_b))
+
+
+def recuperar_top_k(
+    pergunta: str, chunks: list[str], k: int = 3
+) -> list[tuple[str, float]]:
+    """Retorna até k chunks mais similares à pergunta."""
+    if k <= 0:
+        raise ValueError("k deve ser maior que zero")
+    if not chunks:
+        return []
+
+    embedding_pergunta = gerar_embeddings(pergunta)[0]
+    embeddings_chunks = gerar_embeddings(chunks)
+    resultados = [
+        (chunk, similaridade_coseno(embedding_pergunta, embedding_chunk))
+        for chunk, embedding_chunk in zip(chunks, embeddings_chunks)
+    ]
+    return sorted(resultados, key=lambda item: item[1], reverse=True)[:k]
