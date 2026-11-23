@@ -1,7 +1,11 @@
 # Relatório — Pipeline RAG
 
-**Aluno:** `[INSIRA SEU NOME AQUI]`  
-**Curso:** Inteligência Artificial — UNIPAC Barbacena
+**Aluno:** `Taagny Augusto Reis da Silva`  
+**Curso:** Ciência da Computação  
+**Disciplina:** Inteligência Artificial  
+**Instituição:** UNIPAC Barbacena  
+**Professor:** Felipe Roncalli de Paula Carneiro  
+**Data:** 19/11/2026
 
 ## Item 1 — Captura de tela
 
