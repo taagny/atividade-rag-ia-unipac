@@ -4,6 +4,10 @@ import argparse
 from functools import lru_cache
 import os
 from pathlib import Path
+import sys
+
+os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
+os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
 
 import numpy as np
 from dotenv import load_dotenv
@@ -27,6 +31,9 @@ def criar_chunks(texto: str, tamanho_chunk: int, sobreposicao: int) -> list[str]
 @lru_cache(maxsize=1)
 def carregar_modelo_embeddings():
     """Carrega sob demanda um modelo leve e multilíngue."""
+    from transformers import logging as transformers_logging
+
+    transformers_logging.set_verbosity_error()
     from sentence_transformers import SentenceTransformer
 
     return SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
@@ -162,6 +169,7 @@ def executar_desafio2(chunks: list[str]) -> None:
 
 def main() -> None:
     """Ponto de entrada do laboratório."""
+    sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--desafio", choices=["1", "2"], default="1")
     parser.add_argument("--chunk", type=int, default=500)
