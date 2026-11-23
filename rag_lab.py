@@ -1,8 +1,10 @@
 """Laboratório didático de RAG para a atividade da UNIPAC."""
 
 from functools import lru_cache
+import os
 
 import numpy as np
+from dotenv import load_dotenv
 
 
 def criar_chunks(texto: str, tamanho_chunk: int, sobreposicao: int) -> list[str]:
@@ -61,3 +63,38 @@ def recuperar_top_k(
         for chunk, embedding_chunk in zip(chunks, embeddings_chunks)
     ]
     return sorted(resultados, key=lambda item: item[1], reverse=True)[:k]
+
+
+def chamar_llm(prompt: str) -> str:
+    """Chama o provedor configurado ou retorna o prompt para inspeção local."""
+    load_dotenv()
+    provedor = os.getenv("LLM_PROVIDER", "").strip().lower()
+    modelo = os.getenv("LLM_MODEL", "llama3.2:3b")
+
+    if provedor == "ollama":
+        import requests
+
+        resposta = requests.post(
+            os.getenv("OLLAMA_BASE_URL", "http://localhost:11434") + "/api/generate",
+            json={"model": modelo, "prompt": prompt, "stream": False},
+            timeout=120,
+        )
+        resposta.raise_for_status()
+        return resposta.json()["response"]
+
+    if provedor == "openai":
+        from openai import OpenAI
+
+        cliente = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        resposta = cliente.chat.completions.create(
+            model=modelo,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        return resposta.choices[0].message.content or "(LLM não retornou conteúdo.)"
+
+    return "LLM não configurado. Prompt que seria enviado:\n\n" + prompt
+
+
+def responder_rag_off(pergunta: str) -> str:
+    """Responde diretamente à pergunta, sem contexto recuperado."""
+    return chamar_llm(pergunta)
