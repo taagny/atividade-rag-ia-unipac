@@ -98,3 +98,21 @@ def chamar_llm(prompt: str) -> str:
 def responder_rag_off(pergunta: str) -> str:
     """Responde diretamente à pergunta, sem contexto recuperado."""
     return chamar_llm(pergunta)
+
+
+def montar_prompt(pergunta: str, resultados: list[tuple[str, float]]) -> str:
+    """Monta o prompt do RAG ON com o contexto recuperado."""
+    contexto = "\n\n".join(
+        f"[Chunk {indice}]\n{chunk}"
+        for indice, (chunk, _similaridade) in enumerate(resultados, start=1)
+    )
+    return (
+        "Responda à pergunta usando somente o contexto abaixo. "
+        "Se a informação não estiver no contexto, diga que não encontrou a resposta.\n\n"
+        f"Contexto:\n{contexto}\n\nPergunta: {pergunta}"
+    )
+
+
+def responder_rag_on(pergunta: str, resultados: list[tuple[str, float]]) -> str:
+    """Responde usando os chunks recuperados como contexto."""
+    return chamar_llm(montar_prompt(pergunta, resultados))
