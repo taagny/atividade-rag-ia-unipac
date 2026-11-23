@@ -187,6 +187,8 @@ def executar_desafio2(
     for indice, (chunk, similaridade) in enumerate(resultados, start=1):
         print(f"\n[{indice}] Similaridade: {similaridade:.6f}")
         print(chunk)
+    print("\n--- RESPOSTA RAG ON ---")
+    print(responder_rag_on(pergunta, resultados))
 
 
 def main() -> None:
