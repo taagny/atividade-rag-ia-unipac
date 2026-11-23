@@ -21,11 +21,11 @@ Essa diferença ocorre porque a memória paramétrica do modelo pode falhar em d
 
 ## Item 3 — Análise do Desafio 2
 
-Na execução registrada, a configuração **chunk 40 / overlap 10** causou Retrieval Failure didático: embora os três resultados tenham similaridades próximas (0,547787, 0,537774 e 0,474530), os trechos recuperados são fragmentos curtos e não concentram, em uma única unidade, a consequência da falta, a necessidade de justificativa em 24 horas e a advertência após reincidência. Assim, a busca encontra palavras relacionadas, mas perde o sentido completo da regra.
+Na execução registrada, a configuração **chunk 40 / overlap 10** causou Retrieval Failure didático: os três resultados tiveram similaridades de **0,547787**, **0,537774** e **0,474530**, mas os trechos recuperados são fragmentos curtos e não concentram, em uma única unidade, a consequência da falta, a necessidade de justificativa em 24 horas e a advertência após reincidência. Assim, a busca encontra palavras relacionadas, mas pode perder o sentido completo da regra.
 
 Com **chunk 500 / overlap 50**, o primeiro resultado teve similaridade **0,662807** e apresentou a regra completa sobre o dia presencial, a justificativa em até 24 horas, o registro e a advertência. Esse resultado foi mais útil para responder à pergunta.
 
-O trade-off é que chunks muito pequenos preservam alta precisão local, mas podem perder contexto e sentido. Chunks muito grandes preservam mais contexto, mas podem diluir a similaridade vetorial ao misturar assuntos diferentes. A configuração adequada depende do tamanho e da organização dos documentos.
+O melhor resultado de **chunk 500 / overlap 50** teve similaridade **0,662807**, acima do melhor resultado do chunk 40, e trouxe junto da regra do dia presencial trechos de férias e vale-refeição. Isso evidencia a diluição: o vetor carrega mais contexto, mas mistura assuntos diferentes na mesma unidade. Chunks pequenos carregam pouco contexto por unidade e podem recuperar fragmentos sem sentido completo; chunks grandes preservam mais contexto, mas podem diluir a similaridade vetorial. Além disso, a divisão por caracteres corta palavras no meio, como em **“corporat”**, o que também prejudica a qualidade dos embeddings.
 
 ## Item 4 — Cálculo manual da Similaridade de Cosseno
 
