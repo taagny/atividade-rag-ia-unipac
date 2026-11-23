@@ -14,3 +14,11 @@ Insira aqui o print do terminal executando os Desafios 1 e 2, incluindo as pergu
 No modo RAG OFF, o modelo recebe somente a pergunta. Por isso, sua resposta pode ser genérica ou alucinada: ele não tem acesso às políticas privadas da empresa. No modo RAG ON, o contexto recuperado orienta a resposta com os dados da base: a solicitação é feita pelo portal **Serviços-TI**, até o **dia 15 de cada mês**, com **nota fiscal emitida no CPF do colaborador**.
 
 Essa diferença ocorre porque a memória paramétrica do modelo pode falhar em dados corporativos: as informações podem ser privadas, não fazer parte do conjunto de treinamento, estar desatualizadas ou não possuir uma fonte verificável. O RAG reduz esse problema ao buscar o conteúdo relevante em uma fonte externa e fornecê-lo ao modelo no momento da pergunta.
+
+## Item 3 — Análise do Desafio 2
+
+Na execução registrada, a configuração **chunk 40 / overlap 10** causou Retrieval Failure didático: embora os três resultados tenham similaridades próximas (0,547787, 0,537774 e 0,474530), os trechos recuperados são fragmentos curtos e não concentram, em uma única unidade, a consequência da falta, a necessidade de justificativa em 24 horas e a advertência após reincidência. Assim, a busca encontra palavras relacionadas, mas perde o sentido completo da regra.
+
+Com **chunk 500 / overlap 50**, o primeiro resultado teve similaridade **0,662807** e apresentou a regra completa sobre o dia presencial, a justificativa em até 24 horas, o registro e a advertência. Esse resultado foi mais útil para responder à pergunta.
+
+O trade-off é que chunks muito pequenos preservam alta precisão local, mas podem perder contexto e sentido. Chunks muito grandes preservam mais contexto, mas podem diluir a similaridade vetorial ao misturar assuntos diferentes. A configuração adequada depende do tamanho e da organização dos documentos.
